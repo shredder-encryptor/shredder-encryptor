@@ -22,8 +22,12 @@ import os
 import re
 import shutil
 import tempfile
-import uuid
 from pathlib import Path
+from typing import Final, Union
+
+#: Type alias for arguments accepted by the path helpers throughout
+#: this module.  ``None`` is treated as "use the default directory".
+PathLike = Union[str, os.PathLike[str], Path]
 
 __all__ = [
     "DEFAULT_KEY_DIR",
@@ -54,12 +58,12 @@ MAX_KEY_NAME_LENGTH: int = 128
 #: Permission bits applied to every key file.  ``0o600`` means "owner may
 #: read and write, nobody else may access".  This is the closest portable
 #: equivalent to a private key file.
-_KEY_FILE_MODE: int = 0o600
+_KEY_FILE_MODE: Final[int] = 0o600
 
 #: Permission bits applied to the key directory.  ``0o700`` keeps the
 #: directory itself private so that key names cannot be listed by other
 #: users on the host.
-_KEY_DIR_MODE: int = 0o700
+_KEY_DIR_MODE: Final[int] = 0o700
 
 #: Reserved Windows device names that must never be used as file names.
 #: ``Path`` happily creates files such as ``CON`` or ``NUL`` on Windows
@@ -84,7 +88,7 @@ class KeyStoreError(Exception):
     """Raised when a key store operation cannot be completed safely."""
 
 
-def _coerce_path(path):
+def _coerce_path(path: PathLike | None) -> Path:
     """Return a :class:`Path` for ``path`` or the default key directory."""
 
     if path is None:
@@ -94,7 +98,7 @@ def _coerce_path(path):
     return Path(os.fspath(path))
 
 
-def _ensure_directory(directory):
+def _ensure_directory(directory: Path) -> None:
     """Create ``directory`` (and parents) using private permissions."""
 
     try:
@@ -109,13 +113,13 @@ def _ensure_directory(directory):
             os.chmod(directory, _KEY_DIR_MODE)
         except OSError as exc:
             raise KeyStoreError(
-                f"unable to restrict permissions on {directory!s}: {exc}"
+                f"unable to restrict directory permissions on {directory!s}: {exc}"
             ) from exc
     else:
-        _tighten_windows_permissions(directory)
+        _tighten_windows_permissions(directory, kind="directory")
 
 
-def _tighten_windows_permissions(target):
+def _tighten_windows_permissions(target: Path, *, kind: str) -> None:
     """Best-effort equivalent of ``chmod 0o700``/``0o600`` on Windows.
 
     The function only strips inherited ACL entries that grant access to
@@ -123,6 +127,15 @@ def _tighten_windows_permissions(target):
     permissions so it will not widen access on shared systems.  The
     operation is wrapped in ``KeyStoreError`` so callers can surface a
     consistent error type.
+
+    Parameters
+    ----------
+    target:
+        File or directory whose ACL should be tightened.
+    kind:
+        Either ``"directory"`` or ``"file"``.  The label is included
+        in the error message so the caller can tell which side of the
+        save path failed.
     """
 
     if os.name != "nt":
@@ -151,22 +164,22 @@ def _tighten_windows_permissions(target):
         )
     except (OSError, FileNotFoundError) as exc:
         raise KeyStoreError(
-            f"unable to tighten permissions on {target!s}: {exc}"
+            f"unable to tighten {kind} permissions on {target!s}: {exc}"
         ) from exc
     if completed.returncode != 0:
         raise KeyStoreError(
-            f"unable to tighten permissions on {target!s}: "
+            f"unable to tighten {kind} permissions on {target!s}: "
             f"{completed.stderr.strip() or completed.stdout.strip()}"
         )
 
 
-def _resolve_key_path(name, directory):
+def _resolve_key_path(name: str, directory: Path) -> Path:
     """Return the path used to persist the key identified by ``name``."""
 
     return directory / f"{name}{KEY_FILE_SUFFIX}"
 
 
-def validate_key_name(name):
+def validate_key_name(name: str) -> str:
     """Return ``name`` unchanged when it is a legal key identifier.
 
     ``KeyStoreError`` is raised for anything that is not safe to embed
@@ -198,7 +211,7 @@ def validate_key_name(name):
     return name
 
 
-def default_key_dir():
+def default_key_dir() -> Path:
     """Return the default key directory, creating it if necessary."""
 
     directory = DEFAULT_KEY_DIR
@@ -206,7 +219,13 @@ def default_key_dir():
     return directory
 
 
-def save_key(name, data, path=None, *, overwrite=False):
+def save_key(
+    name: str,
+    data: bytes | bytearray | memoryview,
+    path: PathLike | None = None,
+    *,
+    overwrite: bool = False,
+) -> Path:
     """Persist ``data`` under ``name`` and return the resulting file path.
 
     The write is atomic: the payload is first written to a temporary
@@ -248,10 +267,9 @@ def save_key(name, data, path=None, *, overwrite=False):
             f"key {name!r} already exists in {directory!s}"
         )
 
-    # ``NamedTemporaryFile`` is opened with ``delete=False`` because we
-    # need to atomically rename it below.  The unique name keeps
-    # concurrent writers from clobbering one another inside the same
-    # directory.
+    # ``mkstemp`` returns a low-level file descriptor we own.  The
+    # unique name keeps concurrent writers from clobbering one another
+    # inside the same directory.
     fd, tmp_path_str = tempfile.mkstemp(
         prefix=f".{name}.",
         suffix=f"{KEY_FILE_SUFFIX}.tmp",
@@ -281,11 +299,11 @@ def save_key(name, data, path=None, *, overwrite=False):
                 os.chmod(tmp_path, _KEY_FILE_MODE)
             except OSError as exc:
                 raise KeyStoreError(
-                    f"unable to restrict permissions on {tmp_path!s}: {exc}"
+                    f"unable to restrict file permissions on {tmp_path!s}: {exc}"
                 ) from exc
         os.replace(tmp_path, destination)
         if os.name != "posix":
-            _tighten_windows_permissions(destination)
+            _tighten_windows_permissions(destination, kind="file")
     except BaseException:
         # Best effort cleanup so we never leave temporary files behind.
         try:
@@ -296,7 +314,7 @@ def save_key(name, data, path=None, *, overwrite=False):
     return destination
 
 
-def load_key(name, path=None):
+def load_key(name: str, path: PathLike | None = None) -> bytes:
     """Return the raw bytes previously stored under ``name``."""
 
     validate_key_name(name)
@@ -315,7 +333,12 @@ def load_key(name, path=None):
         ) from exc
 
 
-def delete_key(name, path=None, *, missing_ok=False):
+def delete_key(
+    name: str,
+    path: PathLike | None = None,
+    *,
+    missing_ok: bool = False,
+) -> bool:
     """Remove ``name`` from the store.  Return ``True`` when a file was deleted.
 
     The default behaviour mirrors :func:`os.remove`: missing keys raise
@@ -342,8 +365,15 @@ def delete_key(name, path=None, *, missing_ok=False):
         ) from exc
 
 
-def list_keys(path=None):
-    """Return a sorted list of key names currently stored on disk."""
+def list_keys(path: PathLike | None = None, *, cleanup: bool = False) -> list[str]:
+    """Return a sorted list of key names currently stored on disk.
+
+    When ``cleanup`` is ``True`` any leftover temporary file produced
+    by an interrupted :func:`save_key` is removed before the listing
+    is built.  The temporary files are recognised by their
+    ``.tmp`` suffix and are matched against known key names so
+    un-related stray files are never touched.
+    """
 
     directory = _coerce_path(path)
     if not directory.exists():
@@ -353,7 +383,8 @@ def list_keys(path=None):
             f"key path {directory!s} is not a directory"
         )
 
-    names = []
+    known_names: set[str] = set()
+    names: list[str] = []
     try:
         entries = directory.iterdir()
     except OSError as exc:
@@ -363,22 +394,34 @@ def list_keys(path=None):
     for entry in entries:
         if not entry.is_file():
             continue
-        if not entry.name.endswith(KEY_FILE_SUFFIX):
+        if entry.name.endswith(KEY_FILE_SUFFIX):
+            candidate = entry.name[: -len(KEY_FILE_SUFFIX)]
+            try:
+                validate_key_name(candidate)
+            except KeyStoreError:
+                continue
+            known_names.add(candidate)
+            names.append(candidate)
             continue
-        # ``validate_key_name`` would also reject the suffix; strip it
-        # before validation so an attacker dropping random files into
-        # the directory cannot surface arbitrary strings to callers.
-        candidate = entry.name[: -len(KEY_FILE_SUFFIX)]
-        try:
-            validate_key_name(candidate)
-        except KeyStoreError:
-            continue
-        names.append(candidate)
+        if cleanup and entry.name.endswith(f"{KEY_FILE_SUFFIX}.tmp"):
+            # ``tempfile.mkstemp`` builds names like ``.primary.xyz123.key.tmp``.
+            # The original key name is the chunk between the leading dot
+            # and the random suffix; we only remove the file when that
+            # chunk still maps to a known key, which is enough to make
+            # the operation safe on user-managed directories.
+            stem = entry.name[: -len(f"{KEY_FILE_SUFFIX}.tmp")]
+            if stem.startswith(".") and stem[1:].split(".", 1)[0] in known_names:
+                try:
+                    entry.unlink()
+                except OSError:
+                    # Listing must not fail because of a stray temporary
+                    # file we cannot delete (locked, permission, ...).
+                    pass
     names.sort()
     return names
 
 
-def key_exists(name, path=None):
+def key_exists(name: str, path: PathLike | None = None) -> bool:
     """Return ``True`` if a key named ``name`` is present in the store."""
 
     validate_key_name(name)
@@ -386,7 +429,7 @@ def key_exists(name, path=None):
     return _resolve_key_path(name, directory).exists()
 
 
-def clear_keys(path=None):
+def clear_keys(path: PathLike | None = None) -> int:
     """Delete every key in ``path`` and return the number of removed files.
 
     When ``path`` is omitted the default key directory is used.  Missing
@@ -403,7 +446,7 @@ def clear_keys(path=None):
     return removed
 
 
-def _reset_default_directory_for_tests():  # pragma: no cover - test helper
+def _reset_default_directory_for_tests() -> None:  # pragma: no cover - test helper
     """Test helper that forces a fresh default directory on every call.
 
     The function is intentionally not exported through ``__all__``; it
@@ -417,7 +460,6 @@ def _reset_default_directory_for_tests():  # pragma: no cover - test helper
         shutil.rmtree(directory, ignore_errors=True)
 
 
-# ``uuid`` is imported above only so that future revisions of this
-# module can rely on a collision-free scratch space if needed.  The
-# import is intentionally kept to make the dependency explicit.
-del uuid
+# ``_reset_default_directory_for_tests`` below exposes a hook used by
+# the unit tests to keep the default directory isolated.  It is not
+# part of the public API.
