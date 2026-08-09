@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unicodedata
 from collections.abc import Iterator
-from typing import Final, List, Tuple, Union
+from typing import Final
 
 __all__ = [
     "DEFAULT_ENCODING",
@@ -35,13 +35,13 @@ ENCODING_ERRORS: Final[str] = "strict"
 
 #: Aliases accepted by :func:`normalize` so callers do not have to
 #: remember the exact NFxx spelling.
-NORMALIZATION_FORMS: Final[Tuple[str, ...]] = ("NFC", "NFD", "NFKC", "NFKD")
+NORMALIZATION_FORMS: Final[tuple[str, ...]] = ("NFC", "NFD", "NFKC", "NFKD")
 
 #: Union of byte-like types accepted by the encoding helpers.
-ByteLike = Union[bytes, bytearray, memoryview]
+ByteLike = bytes | bytearray | memoryview
 
 #: Union of textual types accepted by the encoding helpers.
-TextLike = Union[str, ByteLike]
+TextLike = str | ByteLike
 
 
 def to_bytes(
@@ -146,7 +146,7 @@ def chunk(text: str, size: int) -> Iterator[str]:
         yield text[index : index + size]
 
 
-def codepoint_distribution(text: str) -> List[Tuple[str, int]]:
+def codepoint_distribution(text: str) -> list[tuple[str, int]]:
     """Return a sorted list of ``(char, count)`` pairs for ``text``.
 
     The helper is primarily intended for inspecting how a cipher

@@ -10,7 +10,7 @@ message instead of a generic traceback.
 from __future__ import annotations
 
 import random
-from typing import Iterable, List, Optional
+from collections.abc import Iterable
 
 from .base import BaseCipher, CipherError
 
@@ -26,7 +26,7 @@ def assert_round_trip(
     cipher: BaseCipher,
     plaintext: bytes,
     *,
-    expected: Optional[bytes] = None,
+    expected: bytes | None = None,
     message: str = "",
 ) -> None:
     """Assert that ``cipher.decrypt(cipher.encrypt(plaintext)) == plaintext``.
@@ -76,7 +76,7 @@ def assert_irreversible(cipher: BaseCipher, plaintext: bytes) -> None:
 def random_bytes(
     length: int,
     *,
-    seed: Optional[int] = None,
+    seed: int | None = None,
     max_byte: int = 256,
 ) -> bytes:
     """Return ``length`` pseudo-random bytes.
@@ -100,7 +100,7 @@ def fuzz_cipher(
     inputs: Iterable[bytes],
     *,
     iterations: int = 32,
-) -> List[bytes]:
+) -> list[bytes]:
     """Run ``assert_round_trip`` on every input ``iterations`` times.
 
     The function returns the list of cipher texts produced (one per
@@ -112,7 +112,7 @@ def fuzz_cipher(
 
     if not isinstance(iterations, int) or iterations < 1:
         raise ValueError("iterations must be a positive int")
-    results: List[bytes] = []
+    results: list[bytes] = []
     for plain in inputs:
         for _ in range(iterations):
             assert_round_trip(cipher, plain)

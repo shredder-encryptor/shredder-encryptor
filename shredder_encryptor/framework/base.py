@@ -15,7 +15,7 @@ framework does not pull any extra dependencies.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any, ClassVar, Dict, Mapping, Protocol, runtime_checkable
+from typing import Any, ClassVar, Mapping, Protocol, runtime_checkable
 
 __all__ = [
     "CipherError",
@@ -85,9 +85,9 @@ class BaseCipher(ABC):
     parameters: ClassVar[Mapping[str, Any]] = {}
 
     def __init__(self, **kwargs: Any) -> None:
-        merged: Dict[str, Any] = dict(self.parameters)
+        merged: dict[str, Any] = dict(self.parameters)
         merged.update(kwargs)
-        self._params: Dict[str, Any] = merged
+        self._params: dict[str, Any] = merged
 
     @property
     def name(self) -> str:
@@ -96,7 +96,7 @@ class BaseCipher(ABC):
         algo: str = self.algorithm or type(self).__name__
         return f"{type(self).__name__}:{algo}"
 
-    def describe(self) -> Dict[str, Any]:
+    def describe(self) -> dict[str, Any]:
         """Return a JSON-friendly description of the cipher."""
 
         return {

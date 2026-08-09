@@ -14,7 +14,7 @@ side detects the problem.
 
 from __future__ import annotations
 
-from typing import Iterable, List, Union
+from collections.abc import Iterable
 
 from .base import BaseCipher, CipherError
 
@@ -27,13 +27,13 @@ class Pipeline:
     __slots__ = ("_ciphers",)
 
     def __init__(self, ciphers: Iterable[BaseCipher] = ()) -> None:
-        ordered: List[BaseCipher] = list(ciphers)
+        ordered: list[BaseCipher] = list(ciphers)
         for cipher in ordered:
             if not isinstance(cipher, BaseCipher):
                 raise CipherError(
                     f"pipeline members must be BaseCipher instances, got {type(cipher).__name__}"
                 )
-        self._ciphers: List[BaseCipher] = ordered
+        self._ciphers: list[BaseCipher] = ordered
 
     @property
     def DECRYPTABLE(self) -> bool:  # noqa: N802 - match BaseCipher spelling
@@ -54,7 +54,7 @@ class Pipeline:
     def __getitem__(self, index: int) -> BaseCipher:
         return self._ciphers[index]
 
-    def __add__(self, other: "Union[Pipeline, BaseCipher]") -> "Pipeline":
+    def __add__(self, other: "Pipeline | BaseCipher") -> "Pipeline":
         if isinstance(other, Pipeline):
             return Pipeline(self._ciphers + other._ciphers)
         if isinstance(other, BaseCipher):
@@ -63,7 +63,7 @@ class Pipeline:
             f"can only concatenate Pipeline or BaseCipher (not {type(other).__name__})"
         )
 
-    def __radd__(self, other: "Union[Pipeline, BaseCipher]") -> "Pipeline":
+    def __radd__(self, other: "Pipeline | BaseCipher") -> "Pipeline":
         if isinstance(other, Pipeline):
             return Pipeline(other._ciphers + self._ciphers)
         if isinstance(other, BaseCipher):

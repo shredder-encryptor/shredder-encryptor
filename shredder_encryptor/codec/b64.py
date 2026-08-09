@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import base64
 import binascii
-from typing import Final, Set
+from typing import Final
 
 from .text import ByteLike, TextLike
 
@@ -40,7 +40,7 @@ _MAX_B64_BYTES: Final[int] = 1 << 20  # 1 MiB of raw data.
 
 #: Supported alphabet identifiers for :func:`is_base64` and
 #: :func:`int_to_b64`.
-_ALPHABETS: Final[Set[str]] = {"standard", "url"}
+_ALPHABETS: Final[set[str]] = {"standard", "url"}
 
 
 def encode(data: ByteLike) -> str:
@@ -106,7 +106,7 @@ def is_base64(text: str, *, alphabet: str = "standard") -> bool:
     if not candidate:
         return False
     if alphabet == "standard":
-        allowed: Set[str] = set(
+        allowed: set[str] = set(
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
         )
     elif alphabet == "url":
