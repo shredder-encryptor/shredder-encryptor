@@ -62,9 +62,7 @@ def decode(text: TextLike, *, validate: bool = False) -> bytes:
     if isinstance(text, (bytes, bytearray, memoryview)):
         text = bytes(text).decode("ascii")
     if not isinstance(text, str):
-        raise TypeError(
-            f"text must be str or bytes-like, got {type(text).__name__}"
-        )
+        raise TypeError(f"text must be str or bytes-like, got {type(text).__name__}")
     if validate and not is_base64(text, alphabet="standard"):
         raise ValueError("text is not valid base64")
     return base64.b64decode(text, validate=validate)
@@ -82,9 +80,7 @@ def decode_url(text: TextLike, *, validate: bool = False) -> bytes:
     if isinstance(text, (bytes, bytearray, memoryview)):
         text = bytes(text).decode("ascii")
     if not isinstance(text, str):
-        raise TypeError(
-            f"text must be str or bytes-like, got {type(text).__name__}"
-        )
+        raise TypeError(f"text must be str or bytes-like, got {type(text).__name__}")
     if validate and not is_base64(text, alphabet="url"):
         raise ValueError("text is not valid base64")
     return base64.urlsafe_b64decode(text)
@@ -114,9 +110,7 @@ def is_base64(text: str, *, alphabet: str = "standard") -> bool:
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_="
         )
     else:
-        raise ValueError(
-            f"alphabet must be 'standard' or 'url', got {alphabet!r}"
-        )
+        raise ValueError(f"alphabet must be 'standard' or 'url', got {alphabet!r}")
     if any(ch not in allowed for ch in candidate):
         return False
     # ``len % 4`` must be 0, 2 or 3; 1 is never valid base64.  Padding
@@ -124,9 +118,7 @@ def is_base64(text: str, *, alphabet: str = "standard") -> bool:
     remainder: int = len(candidate) % 4
     if remainder == 1:
         return False
-    if "=" in candidate and not candidate.endswith(
-        "=" * (4 - remainder or 4)
-    ):
+    if "=" in candidate and not candidate.endswith("=" * (4 - remainder or 4)):
         return False
     try:
         if alphabet == "standard":
@@ -148,17 +140,13 @@ def b64_to_int(text: str, *, alphabet: str = "standard") -> int:
     elif alphabet == "url":
         raw = decode_url(text, validate=True)
     else:
-        raise ValueError(
-            f"alphabet must be 'standard' or 'url', got {alphabet!r}"
-        )
+        raise ValueError(f"alphabet must be 'standard' or 'url', got {alphabet!r}")
     if len(raw) > _MAX_B64_BYTES:
         raise ValueError("input is too large to be converted to an int")
     return int.from_bytes(raw, "big", signed=False)
 
 
-def int_to_b64(
-    value: int, *, alphabet: str = "standard", min_length: int = 0
-) -> str:
+def int_to_b64(value: int, *, alphabet: str = "standard", min_length: int = 0) -> str:
     """Encode ``value`` as a base64 string.
 
     ``min_length`` lets callers left-pad the output with zero bytes,
@@ -173,9 +161,7 @@ def int_to_b64(
     if min_length < 0:
         raise ValueError("min_length must be non-negative")
     if alphabet not in _ALPHABETS:
-        raise ValueError(
-            f"alphabet must be 'standard' or 'url', got {alphabet!r}"
-        )
+        raise ValueError(f"alphabet must be 'standard' or 'url', got {alphabet!r}")
     raw: bytes = value.to_bytes(
         max(min_length, (value.bit_length() + 7) // 8 or 1), "big"
     )

@@ -47,9 +47,7 @@ def _validate_block_size(block_size: int) -> int:
     """Return ``block_size`` when it is in the allowed range."""
 
     if not isinstance(block_size, int) or isinstance(block_size, bool):
-        raise TypeError(
-            f"block_size must be an int, got {type(block_size).__name__}"
-        )
+        raise TypeError(f"block_size must be an int, got {type(block_size).__name__}")
     if block_size < MIN_BLOCK_SIZE or block_size > MAX_BLOCK_SIZE:
         raise ValueError(
             f"block_size must be between {MIN_BLOCK_SIZE} and {MAX_BLOCK_SIZE}"
@@ -65,9 +63,7 @@ def required_padding_length(data_length: int, block_size: int) -> int:
     """
 
     if not isinstance(data_length, int) or isinstance(data_length, bool):
-        raise TypeError(
-            f"data_length must be an int, got {type(data_length).__name__}"
-        )
+        raise TypeError(f"data_length must be an int, got {type(data_length).__name__}")
     if data_length < 0:
         raise ValueError("data_length must be non-negative")
     _validate_block_size(block_size)

@@ -93,9 +93,7 @@ def hex_to_int(text: str) -> int:
     return int(cleaned, 16)
 
 
-def int_to_hex(
-    value: int, case: str = DEFAULT_CASE, prefix: bool = False
-) -> str:
+def int_to_hex(value: int, case: str = DEFAULT_CASE, prefix: bool = False) -> str:
     """Return ``value`` formatted as a base-16 string.
 
     ``prefix`` controls whether a leading ``"0x"`` is included; ``case``

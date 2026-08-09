@@ -61,16 +61,12 @@ def assert_irreversible(cipher: BaseCipher, plaintext: bytes) -> None:
         )
     digest: bytes = cipher.encrypt(plaintext)
     if not isinstance(digest, (bytes, bytearray, memoryview)):
-        raise AssertionError(
-            f"digest must be bytes-like, got {type(digest).__name__}"
-        )
+        raise AssertionError(f"digest must be bytes-like, got {type(digest).__name__}")
     try:
         cipher.decrypt(digest)  # type: ignore[attr-defined]
     except CipherError:
         return
-    raise AssertionError(
-        "one-way cipher unexpectedly accepted a decrypt() call"
-    )
+    raise AssertionError("one-way cipher unexpectedly accepted a decrypt() call")
 
 
 def random_bytes(

@@ -80,9 +80,7 @@ def from_bytes(
     if isinstance(data, str):
         return data
     if not isinstance(data, (bytes, bytearray, memoryview)):
-        raise TypeError(
-            f"data must be bytes-like, got {type(data).__name__}"
-        )
+        raise TypeError(f"data must be bytes-like, got {type(data).__name__}")
     return bytes(data).decode(encoding, errors)
 
 

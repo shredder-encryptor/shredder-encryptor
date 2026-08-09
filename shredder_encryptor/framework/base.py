@@ -112,9 +112,7 @@ class BaseCipher(ABC):
 
         if isinstance(data, (bytes, bytearray, memoryview)):
             return bytes(data)
-        raise CipherError(
-            f"{name} must be bytes-like, got {type(data).__name__}"
-        )
+        raise CipherError(f"{name} must be bytes-like, got {type(data).__name__}")
 
     @staticmethod
     def _require_block(data: bytes, block_size: int, name: str) -> bytes:
@@ -142,9 +140,7 @@ class BaseCipher(ABC):
 
         if not self.DECRYPTABLE:
             raise CipherError(f"{self.name} does not support decryption")
-        raise NotImplementedError(
-            f"{type(self).__name__} must implement decrypt()"
-        )
+        raise NotImplementedError(f"{type(self).__name__} must implement decrypt()")
 
     def verify(self, plaintext: bytes, digest: bytes) -> bool:
         """Return ``True`` when ``digest`` matches ``encrypt(plaintext)``."""

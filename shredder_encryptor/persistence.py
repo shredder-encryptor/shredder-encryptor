@@ -70,7 +70,10 @@ _KEY_DIR_MODE: Final[int] = 0o700
 #: which then fail mysteriously later.  We reject them up front.
 _WINDOWS_RESERVED_NAMES = frozenset(
     {
-        "CON", "PRN", "AUX", "NUL",
+        "CON",
+        "PRN",
+        "AUX",
+        "NUL",
         *(f"COM{i}" for i in range(1, 10)),
         *(f"LPT{i}" for i in range(1, 10)),
     }
@@ -203,9 +206,7 @@ def validate_key_name(name: str) -> str:
         )
     upper = name.upper()
     if upper in _WINDOWS_RESERVED_NAMES:
-        raise KeyStoreError(
-            f"key name {name!r} is a reserved Windows device name"
-        )
+        raise KeyStoreError(f"key name {name!r} is a reserved Windows device name")
     if name in {".", ".."}:
         raise KeyStoreError("key name may not be '.' or '..'")
     return name
@@ -263,9 +264,7 @@ def save_key(
 
     destination = _resolve_key_path(name, directory)
     if destination.exists() and not overwrite:
-        raise KeyStoreError(
-            f"key {name!r} already exists in {directory!s}"
-        )
+        raise KeyStoreError(f"key {name!r} already exists in {directory!s}")
 
     # ``mkstemp`` returns a low-level file descriptor we own.  The
     # unique name keeps concurrent writers from clobbering one another
@@ -291,9 +290,7 @@ def save_key(
                         f"unable to flush key payload to disk: {exc}"
                     ) from exc
         except OSError as exc:
-            raise KeyStoreError(
-                f"unable to write key payload: {exc}"
-            ) from exc
+            raise KeyStoreError(f"unable to write key payload: {exc}") from exc
         if os.name == "posix":
             try:
                 os.chmod(tmp_path, _KEY_FILE_MODE)
@@ -324,13 +321,9 @@ def load_key(name: str, path: PathLike | None = None) -> bytes:
         with open(key_path, "rb") as key_file:
             return key_file.read()
     except FileNotFoundError as exc:
-        raise KeyStoreError(
-            f"key {name!r} not found in {directory!s}"
-        ) from exc
+        raise KeyStoreError(f"key {name!r} not found in {directory!s}") from exc
     except OSError as exc:
-        raise KeyStoreError(
-            f"unable to read key {name!r}: {exc}"
-        ) from exc
+        raise KeyStoreError(f"unable to read key {name!r}: {exc}") from exc
 
 
 def delete_key(
@@ -356,13 +349,9 @@ def delete_key(
     except FileNotFoundError:
         if missing_ok:
             return False
-        raise KeyStoreError(
-            f"key {name!r} not found in {directory!s}"
-        ) from None
+        raise KeyStoreError(f"key {name!r} not found in {directory!s}") from None
     except OSError as exc:
-        raise KeyStoreError(
-            f"unable to delete key {name!r}: {exc}"
-        ) from exc
+        raise KeyStoreError(f"unable to delete key {name!r}: {exc}") from exc
 
 
 def list_keys(path: PathLike | None = None, *, cleanup: bool = False) -> list[str]:
@@ -379,18 +368,14 @@ def list_keys(path: PathLike | None = None, *, cleanup: bool = False) -> list[st
     if not directory.exists():
         return []
     if not directory.is_dir():
-        raise KeyStoreError(
-            f"key path {directory!s} is not a directory"
-        )
+        raise KeyStoreError(f"key path {directory!s} is not a directory")
 
     known_names: set[str] = set()
     names: list[str] = []
     try:
         entries = directory.iterdir()
     except OSError as exc:
-        raise KeyStoreError(
-            f"unable to list keys in {directory!s}: {exc}"
-        ) from exc
+        raise KeyStoreError(f"unable to list keys in {directory!s}: {exc}") from exc
     for entry in entries:
         if not entry.is_file():
             continue

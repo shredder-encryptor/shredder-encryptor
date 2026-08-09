@@ -103,9 +103,9 @@ class ToyFeistelCipher(BaseCipher):
         if len(block) != BLOCK_SIZE:
             raise ValueError(f"block must be exactly {BLOCK_SIZE} bytes")
         value: int = int.from_bytes(block, "big")
-        return _feistel_block(value, self._params["round_keys"], inverse=False).to_bytes(
-            BLOCK_SIZE, "big"
-        )
+        return _feistel_block(
+            value, self._params["round_keys"], inverse=False
+        ).to_bytes(BLOCK_SIZE, "big")
 
     def decrypt_block(self, block: bytes) -> bytes:
         if len(block) != BLOCK_SIZE:
@@ -131,9 +131,7 @@ class ToyFeistelCipher(BaseCipher):
     def decrypt(self, ciphertext: bytes) -> bytes:
         raw: bytes = self._require_bytes(ciphertext, "ciphertext")
         if len(raw) % BLOCK_SIZE != 0:
-            raise ValueError(
-                f"ciphertext length must be a multiple of {BLOCK_SIZE}"
-            )
+            raise ValueError(f"ciphertext length must be a multiple of {BLOCK_SIZE}")
         out: bytearray = bytearray(len(raw))
         for offset in range(0, len(raw), BLOCK_SIZE):
             out[offset : offset + BLOCK_SIZE] = self.decrypt_block(

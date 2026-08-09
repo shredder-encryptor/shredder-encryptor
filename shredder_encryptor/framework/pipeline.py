@@ -43,7 +43,9 @@ class Pipeline:
 
     @property
     def algorithm(self) -> str:
-        return "+".join(cipher.algorithm or type(cipher).__name__ for cipher in self._ciphers)
+        return "+".join(
+            cipher.algorithm or type(cipher).__name__ for cipher in self._ciphers
+        )
 
     def __len__(self) -> int:
         return len(self._ciphers)
@@ -107,9 +109,7 @@ class Pipeline:
         data: bytes = bytes(ciphertext)
         for index, cipher in enumerate(reversed(self._ciphers)):
             if not cipher.DECRYPTABLE:
-                raise CipherError(
-                    f"cipher #{index} ({cipher.name}) is not reversible"
-                )
+                raise CipherError(f"cipher #{index} ({cipher.name}) is not reversible")
             data = cipher.decrypt(data)
             if not isinstance(data, (bytes, bytearray, memoryview)):
                 raise CipherError(
