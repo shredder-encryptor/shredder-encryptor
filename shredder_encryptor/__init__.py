@@ -12,5 +12,5 @@ import codec as codec
 import framework as framework
 import cipher as cipher
 
-__version__ = "0.1.0"
+__version__ = "2026.8"
 __lincense__ = "MIT"
