@@ -12,7 +12,7 @@ import codec as codec
 import framework as framework
 import cipher as cipher
 
-__version__ = "2026.8"
+__version__ = "2026.8.0"
 __license__ = "MIT"
 __copyright__ = "Copyright (c) 2026-present aiwonderland"
 __author__ = "aiwonderland"
