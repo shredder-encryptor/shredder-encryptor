@@ -13,4 +13,4 @@ import framework as framework
 import cipher as cipher
 
 __version__ = "2026.8"
-__lincense__ = "MIT"
+__license__ = "MIT"
