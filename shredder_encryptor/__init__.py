@@ -7,10 +7,10 @@ decryption purposes. The second type is non-decryptable code—once
 you encode data with it, there is no way to decrypt it back.
 """
 
-import persistence as persistence
-import codec as codec
-import framework as framework
-import cipher as cipher
+from . import persistence
+from . import codec
+from . import framework
+from . import cipher
 
 __version__ = "2026.8.0"
 __license__ = "MIT"
