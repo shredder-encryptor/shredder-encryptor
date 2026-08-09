@@ -14,3 +14,4 @@ import cipher as cipher
 
 __version__ = "2026.8"
 __license__ = "MIT"
+__copyright__ = "Copyright (c) 2026-present aiwonderland"
