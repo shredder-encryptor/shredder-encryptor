@@ -121,9 +121,7 @@ class _FeistelBase(BaseCipher):
         if not key_bytes:
             raise ValueError("Feistel key must not be empty")
         if len(key_bytes) > BLOCK_SIZE:
-            raise ValueError(
-                f"Feistel key must be at most {BLOCK_SIZE} bytes"
-            )
+            raise ValueError(f"Feistel key must be at most {BLOCK_SIZE} bytes")
         round_keys: list[int] = _derive_round_keys(key_bytes)
         super().__init__(key=key_bytes, round_keys=round_keys)
 
@@ -167,9 +165,7 @@ class FeistelEcbCipher(_FeistelBase):
     def decrypt(self, ciphertext: bytes) -> bytes:
         raw: bytes = self._require_bytes(ciphertext, "ciphertext")
         if len(raw) % BLOCK_SIZE != 0:
-            raise ValueError(
-                f"ciphertext length must be a multiple of {BLOCK_SIZE}"
-            )
+            raise ValueError(f"ciphertext length must be a multiple of {BLOCK_SIZE}")
         out: bytearray = bytearray(len(raw))
         for offset in range(0, len(raw), BLOCK_SIZE):
             out[offset : offset + BLOCK_SIZE] = self.decrypt_block(
@@ -206,9 +202,7 @@ class FeistelCbcCipher(_FeistelBase):
     def decrypt(self, ciphertext: bytes) -> bytes:
         raw: bytes = self._require_bytes(ciphertext, "ciphertext")
         if len(raw) < BLOCK_SIZE * 2 or len(raw) % BLOCK_SIZE != 0:
-            raise ValueError(
-                "ciphertext is too short or not block-aligned"
-            )
+            raise ValueError("ciphertext is too short or not block-aligned")
         iv, body = raw[:BLOCK_SIZE], raw[BLOCK_SIZE:]
         out: bytearray = bytearray(len(body))
         previous: bytes = iv

@@ -27,23 +27,29 @@ def encode_qp(
 ) -> bytes:
     """Return ``data`` encoded with quoted-printable."""
 
-    payload: bytes = bytes(data) if not isinstance(
-        data, (bytes, bytearray, memoryview)
-    ) else bytes(data)
+    payload: bytes = (
+        bytes(data)
+        if not isinstance(data, (bytes, bytearray, memoryview))
+        else bytes(data)
+    )
     if not isinstance(payload, bytes):  # pragma: no cover - defensive
-        raise TypeError(
-            f"data must be bytes-like, got {type(payload).__name__}"
-        )
+        raise TypeError(f"data must be bytes-like, got {type(payload).__name__}")
     if not isinstance(max_line_length, int) or max_line_length <= 0:
         raise ValueError("max_line_length must be a positive int")
-    # ``b2a_qp`` accepts ``header`` and ``maxlinelen`` since Python 3.10.
-    return binascii.b2a_qp(payload, header=header, maxlinelen=max_line_length)
+    # ``binascii.b2a_qp`` does not expose ``maxlinelen``; the wrapper
+    # accepts the parameter so the API matches the rest of the project
+    # but only forwards ``header``.  Callers that need strict line
+    # folding should pre-wrap the payload themselves.
+    del max_line_length
+    return binascii.b2a_qp(payload, header=header)
 
 
 def decode_qp(data: ByteLike, *, header: bool = False) -> bytes:
     """Decode ``data`` from quoted-printable to raw bytes."""
 
-    payload: bytes = bytes(data) if not isinstance(
-        data, (bytes, bytearray, memoryview)
-    ) else bytes(data)
+    payload: bytes = (
+        bytes(data)
+        if not isinstance(data, (bytes, bytearray, memoryview))
+        else bytes(data)
+    )
     return binascii.a2b_qp(payload, header=header)

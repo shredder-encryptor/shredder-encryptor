@@ -118,8 +118,26 @@ def is_base64(text: str, *, alphabet: str = "standard") -> bool:
     remainder: int = len(candidate) % 4
     if remainder == 1:
         return False
-    if "=" in candidate and not candidate.endswith("=" * (4 - remainder or 4)):
-        return False
+    if remainder != 0:
+        # When the length is not a multiple of four, the missing
+        # characters must be filled with ``=`` padding.
+        padding: str = "=" * (4 - remainder)
+        if not candidate.endswith(padding):
+            return False
+        # ``=`` is only legal as trailing padding; nothing else may
+        # appear after the first ``=`` we have already consumed.
+        if "=" in candidate[: -len(padding)]:
+            return False
+    elif "=" in candidate:
+        # A multiple-of-four input may be unpadded, or padded with up
+        # to two ``=`` characters that form the trailing padding.
+        # The padding characters must be a contiguous suffix and
+        # there can be at most two of them.
+        pad_count = candidate.count("=")
+        if pad_count > 2:
+            return False
+        if not candidate.endswith("=" * pad_count):
+            return False
     try:
         if alphabet == "standard":
             base64.b64decode(candidate, validate=True)

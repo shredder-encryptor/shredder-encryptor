@@ -373,9 +373,16 @@ def list_keys(path: PathLike | None = None, *, cleanup: bool = False) -> list[st
     known_names: set[str] = set()
     names: list[str] = []
     try:
-        entries = directory.iterdir()
+        entries: list[Path] = list(directory.iterdir())
     except OSError as exc:
-        raise KeyStoreError(f"unable to list keys in {directory!s}: {exc}") from exc
+        raise KeyStoreError(
+            f"unable to list keys in {directory!s}: {exc}"
+        ) from exc
+    # First pass: collect the known key names so the second pass can
+    # decide which ``.tmp`` files belong to a real key.  Splitting the
+    # work into two iterations makes the cleanup step robust against
+    # directory entry orderings (the ``.tmp`` files are usually listed
+    # before the corresponding ``.key`` on Windows).
     for entry in entries:
         if not entry.is_file():
             continue
@@ -387,14 +394,19 @@ def list_keys(path: PathLike | None = None, *, cleanup: bool = False) -> list[st
                 continue
             known_names.add(candidate)
             names.append(candidate)
-            continue
-        if cleanup and entry.name.endswith(f"{KEY_FILE_SUFFIX}.tmp"):
-            # ``tempfile.mkstemp`` builds names like ``.primary.xyz123.key.tmp``.
-            # The original key name is the chunk between the leading dot
-            # and the random suffix; we only remove the file when that
-            # chunk still maps to a known key, which is enough to make
-            # the operation safe on user-managed directories.
+    if cleanup:
+        for entry in entries:
+            if not entry.is_file():
+                continue
+            if not entry.name.endswith(f"{KEY_FILE_SUFFIX}.tmp"):
+                continue
             stem = entry.name[: -len(f"{KEY_FILE_SUFFIX}.tmp")]
+            # ``tempfile.mkstemp`` builds names like
+            # ``.primary.xyz123.key.tmp``.  The original key name is the
+            # chunk between the leading dot and the random suffix; we
+            # only remove the file when that chunk still maps to a
+            # known key, which is enough to make the operation safe on
+            # user-managed directories.
             if stem.startswith(".") and stem[1:].split(".", 1)[0] in known_names:
                 try:
                     entry.unlink()

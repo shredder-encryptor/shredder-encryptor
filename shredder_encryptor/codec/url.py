@@ -64,9 +64,7 @@ def quote(
     if isinstance(text, (bytes, bytearray, memoryview)):
         return quote_from_bytes(bytes(text), safe=safe)
     if not isinstance(text, str):
-        raise TypeError(
-            f"text must be str or bytes-like, got {type(text).__name__}"
-        )
+        raise TypeError(f"text must be str or bytes-like, got {type(text).__name__}")
     return _stdlib_quote(text, safe=safe, encoding=encoding, errors=errors)
 
 
@@ -80,9 +78,7 @@ def unquote(
     if isinstance(text, (bytes, bytearray, memoryview)):
         text = bytes(text).decode("ascii", errors=errors)
     if not isinstance(text, str):
-        raise TypeError(
-            f"text must be str or bytes-like, got {type(text).__name__}"
-        )
+        raise TypeError(f"text must be str or bytes-like, got {type(text).__name__}")
     return _stdlib_unquote(text, encoding=encoding, errors=errors)
 
 
@@ -97,9 +93,7 @@ def urlencode(
     """Encode a mapping or iterable of pairs as a query string."""
 
     if not isinstance(query, (Mapping, Iterable)):
-        raise TypeError(
-            "query must be a Mapping or an iterable of (key, value) pairs"
-        )
+        raise TypeError("query must be a Mapping or an iterable of (key, value) pairs")
     return _stdlib_urlencode(
         query,
         doseq=doseq,
@@ -128,9 +122,7 @@ def urldecode(
     if isinstance(text, (bytes, bytearray, memoryview)):
         text = bytes(text).decode("ascii", errors=errors)
     if not isinstance(text, str):
-        raise TypeError(
-            f"text must be str or bytes-like, got {type(text).__name__}"
-        )
+        raise TypeError(f"text must be str or bytes-like, got {type(text).__name__}")
     decoded = unquote_plus(text, encoding=encoding, errors=errors)
     pairs: Iterable[tuple[str, str]] = parse_qsl(
         decoded,

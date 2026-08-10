@@ -30,7 +30,10 @@ def encode_ascii85(data: ByteLike, *, wrap: int = 76) -> bytes:
     """Return ``data`` encoded as Adobe-style ASCII85."""
 
     payload: bytes = bytes(data)
-    return base64.a85encode(payload, wrap=wrap, adobe=True)
+    # ``base64.a85encode`` exposes ``wrapcol`` (not ``wrap``); forward
+    # ``wrap`` under the right name so callers can keep using the
+    # familiar keyword.
+    return base64.a85encode(payload, wrapcol=wrap, adobe=True)
 
 
 def decode_ascii85(data: ByteLike, *, adobe: bool = True) -> bytes:
@@ -51,7 +54,9 @@ def decode_ascii85_adb(data: ByteLike, *, foldspaces: bool = False) -> bytes:
     """Decode ``data`` produced by :func:`encode_ascii85_adb`."""
 
     payload: bytes = bytes(data)
-    return base64.a85decode(payload, adobe=False, foldspaces=foldspaces, ignorechars=b"\n\r\t ")
+    return base64.a85decode(
+        payload, adobe=False, foldspaces=foldspaces, ignorechars=b"\n\r\t "
+    )
 
 
 def _roundtrip_check() -> bytes:  # pragma: no cover - smoke helper, not part of API

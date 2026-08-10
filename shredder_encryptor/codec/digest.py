@@ -79,8 +79,7 @@ def digest(
     if algorithm in _VARIABLE_SIZE_ALGOS:
         if length is None:
             raise ValueError(
-                f"{algorithm} requires an explicit length (use "
-                f"length=...)"
+                f"{algorithm} requires an explicit length (use length=...)"
             )
         if length < 0:
             raise ValueError("length must be non-negative")
