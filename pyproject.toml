@@ -1,0 +1,77 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shredder-encryptor"
+version = "2026.8.0"
+description = "A small, dependency-free playground for encoding and encryption in Python."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [
+    { name = "aiwonderland", email = "quantbit@126.com" },
+]
+keywords = [
+    "cryptography",
+    "encoding",
+    "cipher",
+    "base64",
+    "education",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Security :: Cryptography",
+    "Topic :: Education",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/shredder-encryptor/shredder-encryptor"
+Repository = "https://github.com/shredder-encryptor/shredder-encryptor"
+Issues = "https://github.com/shredder-encryptor/shredder-encryptor/issues"
+
+[tool.setuptools]
+include-package-data = true
+zip-safe = false
+platforms = ["any"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["shredder_encryptor*"]
+
+[tool.setuptools.package-data]
+"shredder_encryptor" = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = ["-ra", "--strict-markers"]
+filterwarnings = [
+    "error",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["shredder_encryptor"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+show_missing = true
+skip_covered = false
