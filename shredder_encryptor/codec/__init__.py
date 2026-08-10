@@ -2,8 +2,7 @@
 
 The :mod:`shredder_encryptor.codec` package gathers the small,
 single-purpose modules that the cipher implementations in
-:mod:`shredder_encryptor.cipher` (and the example ciphers in
-:mod:`shredder_encryptor.example`) rely on:
+:mod:`shredder_encryptor.cipher` rely on:
 
 * :mod:`text`            -- text/bytes conversion, normalisation, chunking.
 * :mod:`hexutil`         -- hexadecimal encoding and integer conversion.
