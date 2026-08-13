@@ -12,7 +12,7 @@ from . import codec
 from . import framework
 from . import cipher
 
-__version__ = "2026.8.1-pre4"
+__version__ = "2026.8.1-pre5"
 __license__ = "MIT"
 __copyright__ = "Copyright (c) 2026-present aiwonderland"
 __author__ = "aiwonderland quantbit@126.com"
@@ -34,6 +34,12 @@ if PRE:
 from typing import Any
 
 def __getattr__(attr: Any) -> Any:
-    pass
+    if attr == "__release__" or "__release_version__":
+        import importlib.metadata
+        res = importlib.metadata.version("shredder-encryptor")
+        del importlib.metadata
+    if attr == "__authors__":
+        res = __author__
+    return res
 
 del Any
