@@ -23,11 +23,11 @@ import re
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Final, Union
+from typing import Final
 
 #: Type alias for arguments accepted by the path helpers throughout
 #: this module.  ``None`` is treated as "use the default directory".
-PathLike = Union[str, os.PathLike[str], Path]
+PathLike = str, os.PathLike[str] | Path
 
 __all__ = [
     "DEFAULT_KEY_DIR",
