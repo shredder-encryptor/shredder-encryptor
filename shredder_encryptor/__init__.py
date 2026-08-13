@@ -23,15 +23,27 @@ def _get_pre(ver: str) -> bool:
     return "pre" in ver
 
 
-PRE = _get_pre(__version__)
+def _get_beta(ver: str) -> bool:
+    return "beta" in ver
 
-del _get_pre
+
+PRE = _get_pre(__version__)
+BETA = _get_beta(__version__)
+
+del _get_pre, _get_beta
 
 if PRE:
     import warnings
 
     msg = "This is a pre-release build, and many features may still be under development. Please download the latest official release instead of this pre-release version."
-    warnings.warn(msg, DeprecationWarning, stacklevel=4)
+    warnings.warn(msg, DeprecationWarning, stacklevel=2)
+    del warnings, msg
+
+if BETA:
+    import warnings
+
+    msg = "This is a pre-release build, and many features may still be under development. Please download the latest official release instead of this pre-release version."
+    warnings.warn(msg, DeprecationWarning, stacklevel=6)
     del warnings, msg
 
 from typing import Any
