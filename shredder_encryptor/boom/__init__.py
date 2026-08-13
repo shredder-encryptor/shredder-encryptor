@@ -3,12 +3,12 @@
 The :mod:`shredder_encryptor.boom` package collects the example
 ciphers that demonstrate how the project handles **non-decryptable**
 encoding.  The top-level :mod:`shredder_encryptor` package documents
-the design as::
+the design as:
 
-    The first type is decryptable code, which is generally designed
-    for decryption purposes. The second type is non-decryptable
-    code—once you encode data with it, there is no way to decrypt
-    it back.
+***The first type is decryptable code, which is generally designed
+for decryption purposes. The second type is non-decryptable
+code—once you encode data with it, there is no way to decrypt
+it back.***
 
 The :mod:`shredder_encryptor.cipher` package fulfils the first half
 of that contract; the :mod:`boom` package fulfils the second half.
