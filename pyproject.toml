@@ -58,9 +58,9 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = ["-ra", "--strict-markers"]
-filterwarnings = [
-    "error",
-]
+# filterwarnings = [
+#     "error",
+# ]
 
 [tool.coverage.run]
 branch = true

@@ -375,9 +375,7 @@ def list_keys(path: PathLike | None = None, *, cleanup: bool = False) -> list[st
     try:
         entries: list[Path] = list(directory.iterdir())
     except OSError as exc:
-        raise KeyStoreError(
-            f"unable to list keys in {directory!s}: {exc}"
-        ) from exc
+        raise KeyStoreError(f"unable to list keys in {directory!s}: {exc}") from exc
     # First pass: collect the known key names so the second pass can
     # decide which ``.tmp`` files belong to a real key.  Splitting the
     # work into two iterations makes the cleanup step robust against
