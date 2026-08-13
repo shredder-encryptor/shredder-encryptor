@@ -13,7 +13,7 @@ from . import framework
 from . import cipher
 from . import boom
 
-__version__ = "2026.8.1-pre8"
+__version__ = "2026.8.1-beta1"
 __license__ = "MIT"
 __copyright__ = "Copyright (c) 2026-present aiwonderland"
 __author__ = "aiwonderland quantbit@126.com"
