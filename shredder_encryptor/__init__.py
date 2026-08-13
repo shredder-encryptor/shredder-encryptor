@@ -13,7 +13,7 @@ from . import framework
 from . import cipher
 from . import boom
 
-__version__ = "2026.8.1-pre7"
+__version__ = "2026.8.1-pre8"
 __license__ = "MIT"
 __copyright__ = "Copyright (c) 2026-present aiwonderland"
 __author__ = "aiwonderland quantbit@126.com"
@@ -42,7 +42,7 @@ if PRE:
 if BETA:
     import warnings
 
-    msg = "This is a pre-release build, and many features may still be under development. Please download the latest official release instead of this pre-release version."
+    msg = "This is a beta-release build. Please download the latest official release instead of this beta-release version."
     warnings.warn(msg, DeprecationWarning, stacklevel=6)
     del warnings, msg
 
