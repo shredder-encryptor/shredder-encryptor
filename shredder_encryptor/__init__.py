@@ -11,14 +11,17 @@ from . import persistence
 from . import codec
 from . import framework
 from . import cipher
+from . import boom
 
-__version__ = "2026.8.1-pre5"
+__version__ = "2026.8.1-pre6"
 __license__ = "MIT"
 __copyright__ = "Copyright (c) 2026-present aiwonderland"
 __author__ = "aiwonderland quantbit@126.com"
 
+
 def _get_pre(ver: str) -> bool:
     return "pre" in ver
+
 
 PRE = _get_pre(__version__)
 
@@ -33,13 +36,17 @@ if PRE:
 
 from typing import Any
 
+
 def __getattr__(attr: Any) -> Any:
-    if attr == "__release__" or "__release_version__":
+    if attr in ("__release__", "__release_version__"):
         import importlib.metadata
+
         res = importlib.metadata.version("shredder-encryptor")
         del importlib.metadata
+        return res
     if attr == "__authors__":
-        res = __author__
-    return res
+        return __author__
+    raise AttributeError(f"module {__name__!r} has no attribute {attr!r}")
+
 
 del Any
