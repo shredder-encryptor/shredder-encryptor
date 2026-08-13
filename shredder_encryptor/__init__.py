@@ -12,7 +12,7 @@ from . import codec
 from . import framework
 from . import cipher
 
-__version__ = "2026.8.1-pre2"
+__version__ = "2026.8.1-pre3"
 __license__ = "MIT"
 __copyright__ = "Copyright (c) 2026-present aiwonderland"
 __author__ = "aiwonderland quantbit@126.com"
@@ -21,6 +21,8 @@ def _get_pre(ver: str) -> bool:
     return "pre" in ver
 
 PRE = _get_pre(__version__)
+
+del _get_pre
 
 if PRE:
     import warnings
