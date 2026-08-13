@@ -12,7 +12,7 @@ from . import codec
 from . import framework
 from . import cipher
 
-__version__ = "2026.8.1-pre3"
+__version__ = "2026.8.1-pre4"
 __license__ = "MIT"
 __copyright__ = "Copyright (c) 2026-present aiwonderland"
 __author__ = "aiwonderland quantbit@126.com"
@@ -30,3 +30,10 @@ if PRE:
     msg = "This is a pre-release build, and many features may still be under development. Please download the latest official release instead of this pre-release version."
     warnings.warn(msg, DeprecationWarning, stacklevel=4)
     del warnings, msg
+
+from typing import Any
+
+def __getattr__(attr: Any) -> Any:
+    pass
+
+del Any
