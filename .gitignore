@@ -7,3 +7,6 @@ shredder_encryptor.egg-info/
 htmlcov/
 .coverage
 coverage.json
+coverage_history.db
+test_todo.json
+coverage_report.md

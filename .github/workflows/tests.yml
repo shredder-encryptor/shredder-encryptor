@@ -31,6 +31,10 @@ jobs:
           python -m pip install -e .
           python -m pip install pytest
 
-      - name: "Run tests"
+      - name: "Run main tests"
         run: |
           pytest
+      
+      - name: "Run tools tests"
+        run: |
+         pytest tools/test_coverage_analyze.py

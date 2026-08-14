@@ -16,6 +16,13 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+# Ensure ``tools/coverage_analyze.py`` is importable as a top-level module
+# for the test suite.  ``tools`` is not a Python package (no __init__.py),
+# so we add the directory to ``sys.path`` instead.
+TOOLS = ROOT / "tools"
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
+
 
 import pytest  # noqa: E402 - import after sys.path tweak
 
