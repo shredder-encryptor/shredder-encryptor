@@ -6,3 +6,4 @@ dist/
 shredder_encryptor.egg-info/
 htmlcov/
 .coverage
+coverage.json
