@@ -12,23 +12,12 @@ from . import codec
 from . import framework
 from . import cipher
 from . import boom
+from .version import __version__, _get_beta, _get_pre, BETA, PRE, RELEASE
 
-__version__ = "2026.8.1-beta1-pr2"
 __license__ = "MIT"
 __copyright__ = "Copyright (c) 2026-present aiwonderland"
 __author__ = "aiwonderland quantbit@126.com"
 
-
-def _get_pre(ver: str) -> bool:
-    return "pre" in ver
-
-
-def _get_beta(ver: str) -> bool:
-    return "beta" in ver
-
-
-PRE = _get_pre(__version__)
-BETA = _get_beta(__version__)
 
 del _get_pre, _get_beta
 
