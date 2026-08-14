@@ -141,7 +141,7 @@ def _tighten_windows_permissions(target: Path, *, kind: str) -> None:
         save path failed.
     """
 
-    if os.name != "nt":
+    if os.name != "nt":  # pragma: no cover
         return
     try:
         import subprocess
