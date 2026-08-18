@@ -12,7 +12,15 @@ from . import codec
 from . import framework
 from . import cipher
 from . import boom
-from .version import __version__, _get_beta, _get_pre, BETA, PRE, RELEASE
+from .version import (
+    __version__,
+    __version_tuple__,
+    _get_beta,
+    _get_pre,
+    BETA,
+    PRE,
+    RELEASE,
+)
 
 __title__ = "shredder_encryptor"
 __license__ = "MIT"
