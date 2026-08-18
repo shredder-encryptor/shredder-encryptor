@@ -47,7 +47,7 @@ boundary between the two halves of the API stays clear.
 
 from __future__ import annotations
 
-from . import bloom, discard, scramble, truncate
+# from . import bloom, discard, scramble, truncate
 from .bloom import (
     DEFAULT_HASHES,
     DEFAULT_SIZE,
@@ -67,8 +67,8 @@ __all__ = [
     "KEEP_TAIL",
     "ScrambleCipher",
     "TruncateCipher",
-    "bloom",
-    "discard",
-    "scramble",
-    "truncate",
+    # "bloom",
+    # "discard",
+    # "scramble",
+    # "truncate",
 ]
