@@ -1,6 +1,6 @@
 # shredder_encryptor
 
-A small, dependency-free playground for encoding and encryption in Python.
+A small, dependency-free ~~playground~~ for encoding and encryption in Python.
 The project bundles a handful of classical ciphers, an opinionated
 encoding toolbox, a tiny framework for wiring ciphers together and a
 small on-disk key store.  Everything relies on the standard library
@@ -10,7 +10,7 @@ only.
 
 Early-stage example code.  The shipped ciphers (Vigenère, XOR-stream,
 Feistel block ciphers, SHA-256 wrapper) are intended for learning
-and experimentation; **do not use them to protect real secrets**.
+and experimentation; ~~**do not use them to protect real secrets**~~ **maybe**.
 
 ## Installation
 
