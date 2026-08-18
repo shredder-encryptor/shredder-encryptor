@@ -8,7 +8,7 @@ __version_tuple__ = (
     2,  # Beta major version
     2,  # Beta minor version
     True,  # Is post‑release (pr)
-    3,  # Post number
+    4,  # Post number
 )
 
 vt = __version_tuple__
@@ -30,7 +30,9 @@ else:
     __version__ = base
 
 del (
+    # ``__version_tuple__`` cache
     vt,
+    # version metadata
     major,
     minor,
     build,
@@ -41,7 +43,9 @@ del (
     beta_min,
     is_post,
     post_x,
+    # ???
     base,
+    suffix_parts
 )
 
 
