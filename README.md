@@ -22,11 +22,13 @@ pip install shredder-encryptor
 
 ```
 shredder_encryptor/
-  codec/        # encoding helpers (text, hex, base64, padding, ...)
-  framework/    # BaseCipher, Pipeline, testing utilities
-  cipher/       # ready-to-use algorithms (Vigenère, XorStream, ...)
+  codec/         # encoding helpers (text, hex, base64, padding, ...)
+  framework/     # BaseCipher, Pipeline, testing utilities
+  cipher/        # ready-to-use algorithms (Vigenère, XorStream, ...)
+  boom/          # irreversible (one-way) encryption primitives
   persistence.py # tiny on-disk key store
-tests/          # pytest suite (codec, framework, cipher, persistence)
+  version.py     # version metadata
+tests/           # pytest suite (codec, framework, cipher, persistence, boom)
 ```
 
 ### `codec` — encoders in one place
@@ -75,6 +77,19 @@ load_key("api-token")            # b'super-secret-bytes'
 
 Keys live in `~/.shredder_encryptor/keys/` by default with `0o600`
 permissions on POSIX and ACL-stripped equivalents on Windows.
+
+### `boom` — one-way encryption primitives
+
+```python
+from shredder_encryptor.boom import (
+    ScrambleCipher, TruncateCipher, DiscardCipher, BloomFingerprint,
+)
+from shredder_encryptor.framework import assert_irreversible
+
+assert_irreversible(TruncateCipher(keep=8), b"hello world")
+digest = ScrambleCipher(b"my-key").encrypt(b"hello world")
+fingerprint = BloomFingerprint(size=16, hashes=4).encrypt(b"hello world")
+```
 
 ## Conventions
 
