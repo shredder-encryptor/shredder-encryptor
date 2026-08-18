@@ -14,6 +14,7 @@ from . import cipher
 from . import boom
 from .version import __version__, _get_beta, _get_pre, BETA, PRE, RELEASE
 
+__title__ = "shredder_encryptor"
 __license__ = "MIT"
 __copyright__ = "Copyright (c) 2026-present aiwonderland"
 __author__ = "aiwonderland quantbit@126.com"
