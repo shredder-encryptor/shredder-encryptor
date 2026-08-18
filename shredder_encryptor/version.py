@@ -1,4 +1,4 @@
-__version__ = "2026.8.1-beta1-pr5"
+__version__ = "2026.8.1-beta2"
 
 
 def _get_pre(ver: str) -> bool:
