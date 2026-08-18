@@ -8,7 +8,7 @@ __version_tuple__ = (
     2,  # Beta major version
     2,  # Beta minor version
     True,  # Is post‑release (pr)
-    2,  # Post number
+    3,  # Post number
 )
 
 vt = __version_tuple__
@@ -29,7 +29,20 @@ if suffix_parts:
 else:
     __version__ = base
 
-del (vt, major, minor, build, is_pre, pre_x, is_beta, beta_maj, beta_min, base)
+del (
+    vt,
+    major,
+    minor,
+    build,
+    is_pre,
+    pre_x,
+    is_beta,
+    beta_maj,
+    beta_min,
+    is_post,
+    post_x,
+    base,
+)
 
 
 def _get_pre(ver: str) -> bool:
