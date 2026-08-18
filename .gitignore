@@ -1,12 +1,21 @@
+# off-things
 .venv/
 __pycache__/
+
+# pytest and ruff
 .ruff_cache/
 .pytest_cache/
+
+# build
 dist/
 shredder_encryptor.egg-info/
+
+# coveragepy
 htmlcov/
 .coverage
 coverage.json
+
+# See tools/coverage_analyze.py
 coverage_history.db
 test_todo.json
 coverage_report.md
