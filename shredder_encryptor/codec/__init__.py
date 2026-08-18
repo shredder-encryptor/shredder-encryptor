@@ -22,16 +22,16 @@ sites can simply write ``from shredder_encryptor.codec import b64``.
 from __future__ import annotations
 
 # from . import (
-    # ascii85,
-    # b64,
-    # digest,
-    # hexutil,
-    # padding,
-    # quoted_printable,
-    # text,
-    # token,
-    # url,
-    # uuencode,
+# ascii85,
+# b64,
+# digest,
+# hexutil,
+# padding,
+# quoted_printable,
+# text,
+# token,
+# url,
+# uuencode,
 # )
 from .ascii85 import (
     decode_ascii85,

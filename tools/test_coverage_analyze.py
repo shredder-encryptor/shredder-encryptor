@@ -95,7 +95,9 @@ def _write_coverage_json(
         totals = {
             "covered_lines": total_covered,
             "num_statements": total_stmts,
-            "percent_covered": 100.0 if total_stmts == 0 else total_covered * 100.0 / total_stmts,
+            "percent_covered": 100.0
+            if total_stmts == 0
+            else total_covered * 100.0 / total_stmts,
             "missing_lines": total_missing_lines,
             "num_branches": total_branches,
             "missing_branches": total_missing_branches,
@@ -135,9 +137,7 @@ class TestLoadCoverage:
         with pytest.raises(ValueError):
             load_coverage(bad)
 
-    def test_payload_missing_files_block_raises(
-        self, tmp_path: Path
-    ) -> None:
+    def test_payload_missing_files_block_raises(self, tmp_path: Path) -> None:
         bad = tmp_path / "wrong.json"
         bad.write_text(json.dumps({"totals": {}}), encoding="utf-8")
         with pytest.raises(ValueError):
@@ -176,6 +176,7 @@ class TestLoadCoverage:
         )
         files, _ = load_coverage(path)
         assert files["a.py"].missing_statements == 6
+
 
 # ---------------------------------------------------------------------------
 # compute_todo / compute_diff
@@ -283,12 +284,8 @@ class TestComputeDiff:
             "down.py": self._make(80.0, "down.py"),
         }
         diff = compute_diff(current, previous)
-        assert diff["improved"] == [
-            {"file": "up.py", "from": 70.0, "to": 90.0}
-        ]
-        assert diff["regressed"] == [
-            {"file": "down.py", "from": 80.0, "to": 40.0}
-        ]
+        assert diff["improved"] == [{"file": "up.py", "from": 70.0, "to": 90.0}]
+        assert diff["regressed"] == [{"file": "down.py", "from": 80.0, "to": 40.0}]
         assert diff["added"] == []
         assert diff["removed"] == []
 
@@ -299,6 +296,7 @@ class TestComputeDiff:
         diff = compute_diff(current, previous)
         assert diff["improved"] == []
         assert diff["regressed"] == []
+
 
 # ---------------------------------------------------------------------------
 # record_to_db / fetch_latest
@@ -373,9 +371,7 @@ class TestStorage:
             ).fetchall()
         assert rows == [("a.py", 50.0), ("b.py", 80.0), ("a.py", 60.0)]
 
-    def test_fetch_latest_returns_most_recent(
-        self, tmp_path: Path
-    ) -> None:
+    def test_fetch_latest_returns_most_recent(self, tmp_path: Path) -> None:
         db = tmp_path / "history.db"
         record_to_db(
             db,
@@ -410,12 +406,11 @@ class TestStorage:
         assert latest["a.py"].percent == 70.0
         assert latest["a.py"].missing_statements == 3
 
-    def test_fetch_latest_returns_empty_for_missing_files(
-        self, tmp_path: Path
-    ) -> None:
+    def test_fetch_latest_returns_empty_for_missing_files(self, tmp_path: Path) -> None:
         db = tmp_path / "history.db"
         latest = fetch_latest(db, ["unknown.py"])
         assert latest == {}
+
 
 # ---------------------------------------------------------------------------
 # render_markdown
@@ -476,6 +471,7 @@ class TestRenderMarkdown:
         files, totals = self._build()
         out = render_markdown(files, totals, [], threshold=0.0)
         assert "None - every file is at or above the threshold." in out
+
 
 # ---------------------------------------------------------------------------
 # main() end-to-end
@@ -556,9 +552,7 @@ class TestMain:
         assert "| `bad.py` | 20.0%" in report
         assert db_path.exists()
         with sqlite3.connect(str(db_path)) as conn:
-            row_count = conn.execute(
-                "SELECT COUNT(*) FROM file_cov"
-            ).fetchone()[0]
+            row_count = conn.execute("SELECT COUNT(*) FROM file_cov").fetchone()[0]
         assert row_count == 2
 
     def test_diff_includes_prev_run(self, tmp_path: Path) -> None:
@@ -624,4 +618,3 @@ class TestMain:
         assert "Diff vs previous run" in report
         assert "1 improved" in report
         assert "1 added" in report
-
