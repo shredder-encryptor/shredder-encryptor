@@ -4,11 +4,11 @@ __version_tuple__ = (
     1,  # Build
     False,  # Is pre version
     0,  # Pre version x
-    True,  # Is beta version
-    2,  # Beta major version
-    2,  # Beta minor version
-    True,  # Is post‑release (pr)
-    4,  # Post number
+    False,  # Is beta version
+    0,  # Beta major version
+    0,  # Beta minor version
+    False,  # Is post‑release (pr)
+    0,  # Post number
 )
 
 vt = __version_tuple__
