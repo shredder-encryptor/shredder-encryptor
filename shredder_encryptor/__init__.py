@@ -23,6 +23,10 @@ from .version import (
 )
 
 __title__ = "shredder_encryptor"
+__trademark_title__ = (
+    "shredder_encryptor™",  # Eazy one
+    "Shredder Encryptor™",  # I love this one
+)
 __license__ = "MIT"
 __copyright__ = "Copyright (c) 2026-present aiwonderland"
 __author__ = "aiwonderland quantbit@126.com"
@@ -56,6 +60,8 @@ def __getattr__(attr: Any) -> Any:
         return res
     if attr == "__authors__":
         return __author__
+    if attr == "__trademark__":
+        return __trademark_title__
     raise AttributeError(f"module {__name__!r} has no attribute {attr!r}")
 
 

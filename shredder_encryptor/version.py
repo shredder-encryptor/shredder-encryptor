@@ -3,7 +3,7 @@ __version_tuple__ = (
     8,  # Minor
     2,  # Build
     True,  # Is pre version
-    1,  # Pre version x
+    2,  # Pre version x
     False,  # Is beta version
     0,  # Beta major version
     0,  # Beta minor version
@@ -45,7 +45,7 @@ del (
     post_x,
     # ???
     base,
-    suffix_parts
+    suffix_parts,
 )
 
 
