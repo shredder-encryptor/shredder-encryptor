@@ -1,7 +1,7 @@
 __version_tuple__ = (
     2026,  # Major
     8,  # Minor
-    2,  # Build
+    3,  # Build
     True,  # Is pre version
     2,  # Pre version x
     False,  # Is beta version

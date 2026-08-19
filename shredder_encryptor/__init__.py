@@ -1,5 +1,5 @@
 """
-Shredder Encryptor
+Shredder Encryptor™
 
 The magical encoder holds a set of extraordinary codes within it.
 The first type is decryptable code, which is generally designed for
