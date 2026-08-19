@@ -8,6 +8,7 @@ step.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 import sys
 from pathlib import Path
 
@@ -28,7 +29,7 @@ import pytest  # noqa: E402 - import after sys.path tweak
 
 
 @pytest.fixture(autouse=True)
-def _isolate_default_key_dir() -> None:
+def _isolate_default_key_dir() -> Iterator[None]:
     """Reset the default ``persistence`` directory around every test.
 
     The :mod:`shredder_encryptor.persistence` module exposes a
