@@ -6,7 +6,7 @@ of abstractions that the cipher implementations in
 new cipher only has to subclass :class:`BaseCipher` and implement
 :meth:`encrypt` (and, when reversible, :meth:`decrypt`); the base
 class takes care of validation, equality, repr and the
-``DECRYPTABLE``/``NON_DECRYPTABLE`` flags.
+``DECRYPTABLE`` flags.
 
 The module is intentionally pure-stdlib so that importing the
 framework does not pull any extra dependencies.
